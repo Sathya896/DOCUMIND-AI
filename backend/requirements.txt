@@ -1,0 +1,31 @@
+# --- Web framework ---
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+python-multipart==0.0.20          # required by FastAPI to parse multipart/form-data (file uploads)
+
+# --- Configuration & validation ---
+pydantic==2.10.4
+pydantic-settings==2.7.1          # typed settings loaded from environment variables / .env files
+
+# --- Database (metadata: documents, chunks, chat history) ---
+sqlalchemy==2.0.36                # ORM used with SQLite for structured metadata
+
+# --- PDF processing ---
+pymupdf==1.25.1                   # "fitz" - fast, accurate PDF text extraction
+
+# --- Chunking ---
+langchain-text-splitters==0.3.4   # standalone text-splitting utilities from the LangChain ecosystem
+
+# --- Embeddings ---
+sentence-transformers==3.3.1      # wraps HuggingFace models for sentence/paragraph embeddings
+torch==2.5.1                      # backend tensor library required by sentence-transformers
+
+# --- Vector search ---
+faiss-cpu==1.9.0.post1            # Facebook AI Similarity Search - fast nearest-neighbour search
+
+# --- LLM client (talks to a local Ollama server) ---
+httpx==0.28.1                     # async-capable HTTP client used to call the Ollama REST API
+
+# --- Testing ---
+pytest==8.3.4
+pytest-asyncio==0.25.0

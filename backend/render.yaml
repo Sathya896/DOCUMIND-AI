@@ -1,0 +1,54 @@
+# Render Blueprint (https://render.com/docs/blueprint-spec) for the
+# DocuMind AI backend.
+#
+# WHY A PERSISTENT DISK?
+# ---------------------------
+# Render's web services normally run on an *ephemeral* filesystem - any
+# file written while the app runs is lost on redeploy or restart. Since
+# this app writes uploaded PDFs, the FAISS index, and the SQLite database
+# to disk, we attach a small persistent disk and point every writable
+# directory at a path under its mount, so uploaded documents and chat
+# history survive deploys and restarts.
+#
+# IMPORTANT LIMITATION - THE LLM
+# -----------------------------------
+# This blueprint deploys the FastAPI backend only. It does NOT run Ollama.
+# Render's standard web services aren't a good fit for hosting a local LLM
+# (no GPU on most plans, and bundling a multi-gigabyte model into a web
+# service is impractical). For a real deployment, either:
+#   1. Run Ollama on a separate always-on machine/VM you control and point
+#      `OLLAMA_BASE_URL` at it, or
+#   2. Swap `app/services/llm_service.py` for a call to a hosted LLM API
+#      (the rest of the RAG pipeline - retrieval, prompt construction,
+#      grounding - stays exactly the same either way).
+# See the root README's "Deployment" section for more detail.
+
+services:
+  - type: web
+    name: documind-ai-backend
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: starter
+    healthCheckPath: /health
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: CORS_ORIGINS
+        value: https://your-frontend.vercel.app
+      - key: UPLOAD_DIR
+        value: /app/data/uploads
+      - key: VECTORSTORE_DIR
+        value: /app/data/vectorstore
+      - key: DATA_DIR
+        value: /app/data/db
+      - key: DATABASE_URL
+        value: sqlite:////app/data/db/documind.db
+      - key: OLLAMA_BASE_URL
+        sync: false # set this to your externally-hosted Ollama instance
+      - key: OLLAMA_MODEL
+        value: qwen2.5:3b
+    disk:
+      name: documind-data
+      mountPath: /app/data
+      sizeGB: 1
