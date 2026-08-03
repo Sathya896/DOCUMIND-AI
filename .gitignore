@@ -1,0 +1,42 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+venv/
+.venv/
+env/
+*.egg
+
+# --- Backend runtime data (created dynamically, never committed) ---
+backend/uploads/*
+!backend/uploads/.gitkeep
+backend/vectorstore/*
+!backend/vectorstore/.gitkeep
+backend/data/*.db
+backend/data/*.sqlite3
+!backend/data/.gitkeep
+
+# --- Environment variables ---
+.env
+.env.*
+!.env.example
+
+# --- Node / React ---
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/*.log
+
+# --- Editors / OS ---
+.vscode/
+.idea/
+.DS_Store
+
+# --- Testing / coverage ---
+.pytest_cache/
+.coverage
+htmlcov/
+
+# --- Logs ---
+*.log
